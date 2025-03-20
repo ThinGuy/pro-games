@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canoncentration - Ubuntu Release & Codename Challenge</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap">
+  <style>
+    body {
+      font-family: 'Ubuntu', sans-serif;
+      background-color: #f8f8f8;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+      text-align: center;
+    }
+    
+    .logo {
+      max-width: 500px;
+      height: auto;
+      margin-bottom: 10px;
+    }
+    
+    h2 {
+      color: #e95420;
+      margin-bottom: 20px;
+    }
+    
+    .controls {
+      margin-bottom: 20px;
+    }
+    
+    select, button {
+      font-family: 'Ubuntu', sans-serif;
+      padding: 8px 15px;
+      margin: 0 5px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    
+    button {
+      background-color: #e95420;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    button:hover {
+      background-color: #d74516;
+    }
+    
+    #timer, #score-display {
+      font-size: 18px;
+      margin-bottom: 15px;
+      font-weight: 500;
+    }
+    
+    .game-board {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, 140px);
+      gap: 10px;
+      justify-content: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .card {
+      width: 140px;
+      height: 140px;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+    
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.5s;
+      transform-style: preserve-3d;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border-radius: 8px;
+    }
+    
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+    
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    
+    .card-front {
+      background-color: white;
+      transform: rotateY(180deg);
+      padding: 10px;
+      box-sizing: border-box;
+      color: #333;
+      font-weight: 500;
+      text-align: center;
+      overflow: hidden;
+      word-wrap: normal;
+      white-space: nowrap;
+    }
+    
+    .card-back {
+      background-color: white;
+    }
+    
+    .card.matched .card-front {
+      background-color: white;
+    }
+    
+    #cheatOverlay {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 300px;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.9);
+      box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+      transition: right 0.5s ease-in-out;
+      overflow-y: auto;
+      z-index: 1000;
+      padding: 20px;
+      text-align: left;
+    }
+    
+    .cheat-active #cheatOverlay {
+      right: 0;
+    }
+    
+    .cheat-item {
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .cheat-item p {
+      margin: 5px 0;
+    }
+    
+    .cheat-item .version {
+      font-weight: bold;
+      color: #e95420;
+    }
+    
+    .cheat-item .codename {
+      font-style: italic;
+    }
+
+    /* Confetti animation for winning */
+    @keyframes confetti-fall {
+      0% { transform: translateY(-100vh) rotate(0deg); }
+      100% { transform: translateY(100vh) rotate(360deg); }
+    }
+
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background-color: #e95420;
+      animation: confetti-fall 5s linear forwards;
+      z-index: 1000;
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    /* Different confetti colors */
+    .confetti:nth-child(3n) { background-color: #aea79f; }
+    .confetti:nth-child(3n+1) { background-color: #77216f; }
+    .confetti:nth-child(3n+2) { background-color: #5e2750; }
+
+    /* Different shapes */
+    .confetti:nth-child(5n) { border-radius: 50%; }
+    .confetti:nth-child(5n+2) { width: 8px; height: 12px; }
+    .confetti:nth-child(5n+3) { width: 12px; height: 8px; }
+
+    /* Win message */
+    .win-message {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 20px 40px;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+      z-index: 1001;
+      display: none;
+    }
+    
+    .win-message h3 {
+      color: #e95420;
+      margin-top: 0;
+    }
+    
+    /* OB01 face animation */
+    .obi-face {
+      position: fixed;
+      z-index: 2000;
+      pointer-events: none;
+      animation: pop-in 0.5s forwards;
+    }
+    
+    @keyframes pop-in {
+      0% { transform: translateY(-50%) scale(0); }
+      50% { transform: translateY(-50%) scale(1.2); }
+      100% { transform: translateY(-50%) scale(1); }
+    }
+    
+    /* Toggle option for era logos */
+    .toggle-option {
+      display: inline-flex;
+      align-items: center;
+      margin-left: 10px;
+    }
+    
+    .toggle-option input {
+      margin-right: 5px;
+    }
+    
+    /* Welcome popup styles */
+    .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    
+    .popup-content {
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      max-width: 500px;
+      text-align: center;
+    }
+    
+    .popup-content ul {
+      text-align: left;
+      padding-left: 20px;
+    }
+    
+    .popup-content li {
+      margin-bottom: 8px;
+    }
+    
+    @media (max-width: 768px) {
+      .logo {
+        max-width: 300px;
+      }
+      
+      .game-board {
+        grid-template-columns: repeat(auto-fit, 100px);
+      }
+      
+      .card {
+        width: 100px;
+        height: 100px;
+      }
+      
+      #cheatOverlay {
+        width: 250px;
+      }
+      
+      .popup-content {
+        padding: 15px;
+        max-width: 80%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Welcome Popup -->
+  <div id="start-popup" class="popup">
+    <div class="popup-content">
+      <h2>Welcome to Canoncentration</h2>
+      <p>Match Ubuntu release versions with their corresponding codenames!</p>
+      <ul>
+        <li>Find pairs by matching version numbers (e.g., Ubuntu 20.04) with their codenames (e.g., Focal Fossa)</li>
+        <li>Successful match: +10 points</li>
+        <li>Wrong match: -5 points</li>
+        <li>LTS Match (6.06, 8.04, 10.04, etc.): +15 bonus points</li>
+        <li>Time Bonus: +1 point for every second faster than your previous best time</li>
+        <li>Use the dropdown to select how many pairs you want to match</li>
+        <li>The "Use Era-Specific Logos" option will show different Ubuntu logos on the back of each card based on their release era</li>
+      </ul>
+      <p>See how quickly you can match all the pairs. Good luck!</p>
+      <button id="start-game-btn">Let's Play!</button>
+    </div>
+  </div>
+  
+  <!-- Instructions Button -->
+  <button id="instructions-btn" style="position: absolute; top: 10px; right: 10px;">Instructions</button>
+  
+  <!-- Instructions Popup (initially hidden) -->
+  <div id="instructions-popup" class="popup" style="display: none;">
+    <div class="popup-content">
+      <h2>Canoncentration Instructions</h2>
+      <p>Match Ubuntu release versions with their corresponding codenames!</p>
+      <ul>
+        <li>Find pairs by matching version numbers (e.g., Ubuntu 20.04) with their codenames (e.g., Focal Fossa)</li>
+        <li>Successful match: +10 points</li>
+        <li>Wrong match: -5 points</li>
+        <li>LTS Match (6.06, 8.04, 10.04, etc.): +15 bonus points</li>
+        <li>Time Bonus: +1 point for every second faster than your previous best time</li>
+        <li>Use the dropdown to select how many pairs you want to match</li>
+        <li>The "Use Era-Specific Logos" option will show different Ubuntu logos on the back of each card based on their release era</li>
+        <li>Use the "Help" button if you get stuck, but it'll cost you a sad Obi face!</li>
+      </ul>
+      <p>See how quickly you can match all the pairs. Good luck!</p>
+      <button id="close-instructions-btn">Close</button>
+    </div>
+  </div>
+  
+  <img src="../images/canoncentration-logo.svg" alt="Canoncentration Logo" class="logo">
+  <h2>Ubuntu Release to Codename Challenge</h2>
+  
+  <div class="controls">
+    <label for="numMatches">Select Number of Matches:</label>
+    <select id="numMatches"></select>
+    <button id="startButton">Start Game</button>
+  </div>
+  
+  <div id="timer">Time: 0 s</div>
+  
+  <div class="controls">
+    <button id="cheatButton">Help</button>
+    <div class="toggle-option">
+      <input type="checkbox" id="eraLogosToggle" />
+      <label for="eraLogosToggle">Use Era-Specific Logos</label>
+    </div>
+  </div>
+  
+  <div class="game-board" id="game-board"></div>
+  
+  <div id="cheatOverlay"></div>
+  
+  <div id="winMessage" class="win-message">
+    <h3>Congratulations!</h3>
+    <p id="winMessageText"></p>
+    <button onclick="closeWinMessage()">Play Again</button>
+  </div>
+  
+  <!-- External JavaScript files -->
+  <script src="../js/canoncentration-data.js"></script>
+  <script src="../js/canoncentration-ui.js"></script>
+  <script src="../js/canoncentration-scoring.js"></script>
+  <script src="../js/canoncentration-game.js"></script>
+</body>
+</html>

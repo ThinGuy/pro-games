@@ -1,0 +1,846 @@
+        /* Bonus notification animation */
+        @keyframes fadeUpAndOut {
+            0% { opacity: 1; transform: translateY(0) translateX(-50%); }
+            100% { opacity: 0; transform: translateY(-20px) translateX(-50%); }
+        }
+        
+        .bonus-notice {
+            animation: fadeUpAndOut 1s ease-out forwards;
+        }        .stored-scores {
+            display: flex;
+            justify-content: space-around;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+        
+        .stored-scores div {
+            background-color: #f5f5f5;
+            padding: 8px 15px;
+            border-radius: 5px;
+        }        .score-comparison {
+            display: flex;
+            justify-content: space-around;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+        
+        .score-comparison div {
+            background-color: #f5f5f5;
+            padding: 8px 15px;
+            border-radius: 5px;
+        }        .high-score {
+            background-color: var(--ubuntu-orange);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            text-align: center;
+            width: 600px;
+            max-width: 95vw;
+        }<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ubuntu Whack-a-Mole</title>
+    <!-- Link to Ubuntu font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap">
+    <style>
+        :root {
+            --ubuntu-orange: #E95420;
+            --ubuntu-purple: #772953;
+            --ubuntu-light: #AEA79F;
+            --ubuntu-dark: #333333;
+        }
+        
+        body {
+            font-family: 'Ubuntu', 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            color: var(--ubuntu-dark);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        header {
+            background-color: var(--ubuntu-orange);
+            color: white;
+            width: 100%;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            width: 600px;
+            max-width: 95vw;
+            margin-bottom: 20px;
+        }
+        
+        .score, .time, .level {
+            background-color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        
+        .game-container {
+            width: 600px;
+            height: 450px;
+            max-width: 95vw;
+            background-color: #8BC34A; /* Grass green */
+            position: relative;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            overflow: hidden;
+            background-image: 
+                radial-gradient(circle at 30% 20%, #9CCC65 8%, transparent 8%),
+                radial-gradient(circle at 70% 50%, #9CCC65 6%, transparent 6%),
+                radial-gradient(circle at 40% 70%, #9CCC65 10%, transparent 10%),
+                radial-gradient(circle at 80% 30%, #9CCC65 5%, transparent 5%),
+                radial-gradient(circle at 10% 60%, #9CCC65 7%, transparent 7%);
+        }
+        
+        .hole {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            border-radius: 50%;
+            background-color: #3e2723;
+            overflow: hidden;
+            text-align: center;
+            box-shadow: inset 0 5px 10px rgba(0,0,0,0.5);
+            border: 2px solid #2d1c19;
+        }
+        
+        .mascot {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            bottom: -100px;
+            transition: bottom 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28), transform 0.2s ease;
+            cursor: pointer;
+            border-radius: 50% 50% 0 0;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center bottom;
+            transform-origin: bottom center;
+            animation: bob 2s infinite ease-in-out;
+            animation-play-state: paused;
+        }
+        
+        @keyframes bob {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+        }
+        
+        button {
+            background-color: var(--ubuntu-orange);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--ubuntu-purple);
+        }
+        
+        button:disabled {
+            background-color: var(--ubuntu-light);
+            cursor: not-allowed;
+        }
+        
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .popup-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            text-align: center;
+        }
+        
+        .release-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(255,255,255,0.8);
+            padding: 2px;
+            font-size: 10px;
+            text-align: center;
+            visibility: hidden;
+            border-radius: 0 0 50% 50%;
+        }
+        
+        .mascot:hover .release-info {
+            visibility: visible;
+        }
+        
+        .correct-whack {
+            filter: drop-shadow(0 0 8px #4CAF50);
+        }
+        
+        .wrong-whack {
+            filter: drop-shadow(0 0 8px #F44336);
+        }
+        
+        @media (max-width: 650px) {
+            .game-info {
+                width: 95vw;
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
+            
+            .hole {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .mascot {
+                width: 80px;
+                height: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Ubuntu Whack-a-Mole</h1>
+        <p>🎮 Whack LTS releases for points, avoid non-LTS or lose points!</p>
+    </header>
+    
+    <div class="game-info">
+        <div class="score">Score: <span id="score">0</span></div>
+        <div class="time">Time: <span id="time">60</span>s</div>
+        <div class="level">Level: <span id="level">1</span></div>
+    </div>
+    
+    <div class="high-score">
+        High Score: <span id="high-score">0</span> | Last Score: <span id="last-score">0</span>
+    </div>
+    
+    <div class="game-container" id="game-container">
+        <!-- Holes and mascots will be generated by JavaScript -->
+    </div>
+    
+    <div class="controls">
+        <button id="start-btn">Start Game</button>
+        <button id="instructions-btn">Instructions</button>
+    </div>
+    
+    <div id="start-popup" class="popup">
+        <div class="popup-content">
+            <h2>Welcome to Ubuntu Whack-a-Mole!</h2>
+            <p>Test your knowledge of Ubuntu releases by whacking the LTS (Long Term Support) mascots!</p>
+            <ul style="text-align: left;">
+                <li>Whack LTS mascots for +10 points</li>
+                <li>Avoid non-LTS mascots or lose -5 points</li>
+                <li>LTS releases come out every 2 years in April (xx.04)</li>
+                <li>Examples: 18.04, 20.04, 22.04, 24.04</li>
+                <li>Exception: 6.06 is also an LTS release</li>
+            </ul>
+            <p>You have 60 seconds to score as many points as possible!</p>
+            <div class="stored-scores">
+                <div>Your High Score: <span id="start-high-score">0</span></div>
+                <div>Your Last Score: <span id="start-last-score">0</span></div>
+            </div>
+            <button id="start-game-btn">Let's Play!</button>
+        </div>
+    </div>
+    
+    <div id="instructions-popup" class="popup" style="display: none;">
+        <div class="popup-content">
+            <h2>How to Play</h2>
+            <p>Test your knowledge of Ubuntu releases by whacking the LTS (Long Term Support) mascots!</p>
+            <ul style="text-align: left;">
+                <li>Whack LTS mascots for +10 points</li>
+                <li>Avoid non-LTS mascots or lose -5 points</li>
+                <li>LTS releases come out every 2 years in April (xx.04)</li>
+                <li>Examples: 18.04, 20.04, 22.04, 24.04</li>
+                <li>Exception: 6.06 is also an LTS release</li>
+            </ul>
+            <h3>LTS Release List</h3>
+            <p style="font-size: 0.9em;">
+                6.06 Dapper Drake, 8.04 Hardy Heron, 10.04 Lucid Lynx, 12.04 Precise Pangolin, 
+                14.04 Trusty Tahr, 16.04 Xenial Xerus, 18.04 Bionic Beaver, 20.04 Focal Fossa, 
+                22.04 Jammy Jellyfish, 24.04 Noble Numbat
+            </p>
+            <button id="close-instructions-btn">Close</button>
+        </div>
+    </div>
+    
+    <div id="game-over-popup" class="popup" style="display: none;">
+        <div class="popup-content">
+            <h2>Game Over!</h2>
+            <p>Your final score: <span id="final-score">0</span></p>
+            <p>Level reached: <span id="final-level">1</span></p>
+            <div class="score-comparison">
+                <div>High Score: <span id="end-high-score">0</span></div>
+                <div>Last Score: <span id="end-last-score">0</span></div>
+            </div>
+            <h3>How did you do?</h3>
+            <div id="performance-message"></div>
+            <button id="play-again-btn">Play Again</button>
+        </div>
+    </div>
+    
+    <script>
+        // Ubuntu releases data
+        const ubuntuReleases = [
+            { version: "4.10", name: "Warty Warthog", isLTS: false },
+            { version: "5.04", name: "Hoary Hedgehog", isLTS: false },
+            { version: "5.10", name: "Breezy Badger", isLTS: false },
+            { version: "6.06", name: "Dapper Drake", isLTS: true },  // Exception: LTS
+            { version: "6.10", name: "Edgy Eft", isLTS: false },
+            { version: "7.04", name: "Feisty Fawn", isLTS: false },
+            { version: "7.10", name: "Gutsy Gibbon", isLTS: false },
+            { version: "8.04", name: "Hardy Heron", isLTS: true },
+            { version: "8.10", name: "Intrepid Ibex", isLTS: false },
+            { version: "9.04", name: "Jaunty Jackalope", isLTS: false },
+            { version: "9.10", name: "Karmic Koala", isLTS: false },
+            { version: "10.04", name: "Lucid Lynx", isLTS: true },
+            { version: "10.10", name: "Maverick Meerkat", isLTS: false },
+            { version: "11.04", name: "Natty Narwhal", isLTS: false },
+            { version: "11.10", name: "Oneiric Ocelot", isLTS: false },
+            { version: "12.04", name: "Precise Pangolin", isLTS: true },
+            { version: "12.10", name: "Quantal Quetzal", isLTS: false },
+            { version: "13.04", name: "Raring Ringtail", isLTS: false },
+            { version: "13.10", name: "Saucy Salamander", isLTS: false },
+            { version: "14.04", name: "Trusty Tahr", isLTS: true },
+            { version: "14.10", name: "Utopic Unicorn", isLTS: false },
+            { version: "15.04", name: "Vivid Vervet", isLTS: false },
+            { version: "15.10", name: "Willy Werewolf", isLTS: false },
+            { version: "16.04", name: "Xenial Xerus", isLTS: true },
+            { version: "16.10", name: "Yakkety Yak", isLTS: false },
+            { version: "17.04", name: "Zesty Zapus", isLTS: false },
+            { version: "17.10", name: "Artful Aardvark", isLTS: false },
+            { version: "18.04", name: "Bionic Beaver", isLTS: true },
+            { version: "18.10", name: "Cosmic Cuttlefish", isLTS: false },
+            { version: "19.04", name: "Disco Dingo", isLTS: false },
+            { version: "19.10", name: "Eoan Ermine", isLTS: false },
+            { version: "20.04", name: "Focal Fossa", isLTS: true },
+            { version: "20.10", name: "Groovy Gorilla", isLTS: false },
+            { version: "21.04", name: "Hirsute Hippo", isLTS: false },
+            { version: "21.10", name: "Impish Indri", isLTS: false },
+            { version: "22.04", name: "Jammy Jellyfish", isLTS: true },
+            { version: "22.10", name: "Kinetic Kudu", isLTS: false },
+            { version: "23.04", name: "Lunar Lobster", isLTS: false },
+            { version: "23.10", name: "Mantic Minotaur", isLTS: false },
+            { version: "24.04", name: "Noble Numbat", isLTS: true },
+            { version: "24.10", name: "Oracular Oriole", isLTS: false },
+            { version: "25.04", name: "Plucky Puffin", isLTS: false }
+        ];
+        
+        // Game elements
+        const gameContainer = document.getElementById('game-container');
+        const scoreElement = document.getElementById('score');
+        const timeElement = document.getElementById('time');
+        const levelElement = document.getElementById('level');
+        const startBtn = document.getElementById('start-btn');
+        const instructionsBtn = document.getElementById('instructions-btn');
+        const startPopup = document.getElementById('start-popup');
+        const startGameBtn = document.getElementById('start-game-btn');
+        const instructionsPopup = document.getElementById('instructions-popup');
+        const closeInstructionsBtn = document.getElementById('close-instructions-btn');
+        const gameOverPopup = document.getElementById('game-over-popup');
+        const finalScoreElement = document.getElementById('final-score');
+        const finalLevelElement = document.getElementById('final-level');
+        const performanceMessage = document.getElementById('performance-message');
+        const playAgainBtn = document.getElementById('play-again-btn');
+        
+        // Game state
+        let score = 0;
+        let timeLeft = 60;
+        let level = 1;
+        let gameRunning = false;
+        let timer;
+        let holes = [];
+        let mascots = [];
+        let highScore = 0;
+        let lastScore = 0;
+        
+        // Safely try to access localStorage (with fallback for sandboxed environments)
+        function safeGetItem(key, defaultValue) {
+            try {
+                const value = localStorage.getItem(key);
+                return value !== null ? value : defaultValue;
+            } catch (e) {
+                console.log('localStorage access denied, using session storage instead');
+                return defaultValue;
+            }
+        }
+        
+        function safeSetItem(key, value) {
+            try {
+                localStorage.setItem(key, value);
+                return true;
+            } catch (e) {
+                console.log('localStorage access denied, changes will not persist');
+                return false;
+            }
+        }
+        
+        // Try to load scores, with fallback
+        try {
+            highScore = safeGetItem('ubuntuWhackHighScore', 0);
+            lastScore = safeGetItem('ubuntuWhackLastScore', 0);
+        } catch (e) {
+            console.log('Error accessing storage, using default values');
+        }
+        let holePositions = [
+            {x: 50, y: 50},
+            {x: 250, y: 50},
+            {x: 450, y: 50},
+            {x: 150, y: 150},
+            {x: 350, y: 150},
+            {x: 50, y: 250},
+            {x: 250, y: 250},
+            {x: 450, y: 250},
+            {x: 150, y: 350},
+            {x: 350, y: 350}
+        ];
+        
+        // Adjust hole positions for mobile
+        function adjustForMobile() {
+            if (window.innerWidth <= 650) {
+                const gameWidth = Math.min(600, window.innerWidth * 0.95);
+                const gameHeight = gameWidth * 0.75;
+                gameContainer.style.width = gameWidth + 'px';
+                gameContainer.style.height = gameHeight + 'px';
+                
+                // Recalculate hole positions
+                holePositions = [
+                    {x: gameWidth * 0.1, y: gameHeight * 0.1},
+                    {x: gameWidth * 0.5, y: gameHeight * 0.1},
+                    {x: gameWidth * 0.9, y: gameHeight * 0.1},
+                    {x: gameWidth * 0.3, y: gameHeight * 0.4},
+                    {x: gameWidth * 0.7, y: gameHeight * 0.4},
+                    {x: gameWidth * 0.1, y: gameHeight * 0.7},
+                    {x: gameWidth * 0.5, y: gameHeight * 0.7},
+                    {x: gameWidth * 0.9, y: gameHeight * 0.7},
+                    {x: gameWidth * 0.3, y: gameHeight * 0.9},
+                    {x: gameWidth * 0.7, y: gameHeight * 0.9}
+                ];
+                
+                // Update existing holes if they exist
+                holes.forEach((hole, index) => {
+                    if (index < holePositions.length) {
+                        hole.style.left = (holePositions[index].x - 40) + 'px';
+                        hole.style.top = (holePositions[index].y - 40) + 'px';
+                    }
+                });
+            }
+        }
+        
+        // Create holes
+        function createHoles() {
+            gameContainer.innerHTML = '';
+            holes = [];
+            mascots = [];
+            
+            // Create holes and mascots
+            holePositions.forEach((position, index) => {
+                // Create hole
+                const hole = document.createElement('div');
+                hole.className = 'hole';
+                hole.style.left = (position.x - 50) + 'px';
+                hole.style.top = (position.y - 50) + 'px';
+                gameContainer.appendChild(hole);
+                holes.push(hole);
+                
+                // Create mascot
+                const mascot = document.createElement('div');
+                mascot.className = 'mascot';
+                mascot.dataset.index = index;
+                
+                // No background color as we'll use the actual mascot images
+                mascot.style.backgroundColor = 'transparent';
+                
+                mascot.style.left = '0';
+                mascot.addEventListener('click', whackMascot);
+                
+                // Add release info
+                const releaseInfo = document.createElement('div');
+                releaseInfo.className = 'release-info';
+                mascot.appendChild(releaseInfo);
+                
+                hole.appendChild(mascot);
+                mascots.push(mascot);
+            });
+        }
+        
+        // Start game
+        function startGame() {
+            createHoles();
+            score = 0;
+            timeLeft = 60;
+            level = 1;
+            gameRunning = true;
+            
+            scoreElement.textContent = score;
+            timeElement.textContent = timeLeft;
+            levelElement.textContent = level;
+            
+            // Update high score display
+            try {
+                highScore = safeGetItem('ubuntuWhackHighScore', 0);
+                lastScore = safeGetItem('ubuntuWhackLastScore', 0);
+                
+                const scoreElements = document.querySelectorAll('#high-score, #start-high-score');
+                scoreElements.forEach(el => { 
+                    if (el) el.textContent = highScore; 
+                });
+                
+                const lastScoreElements = document.querySelectorAll('#last-score, #start-last-score');
+                lastScoreElements.forEach(el => { 
+                    if (el) el.textContent = lastScore; 
+                });
+            } catch (e) {
+                console.log('Error updating score display');
+            }
+            
+            startBtn.disabled = true;
+            startPopup.style.display = 'none';
+            
+            // Start timer
+            timer = setInterval(() => {
+                timeLeft--;
+                timeElement.textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+            
+            // Start popping up mascots
+            popUp();
+        }
+        
+        // End game
+        function endGame() {
+            clearInterval(timer);
+            gameRunning = false;
+            startBtn.disabled = false;
+            
+            // Stop any active mascots
+            mascots.forEach(mascot => {
+                mascot.style.bottom = '-100px';
+                mascot.style.animationPlayState = 'paused';
+            });
+            
+            // Update previous scores
+            let beatHighScore = false;
+            let beatLastScore = false;
+            
+            try {
+                if (score > highScore) {
+                    beatHighScore = true;
+                    safeSetItem('ubuntuWhackHighScore', score);
+                    highScore = score;
+                }
+                
+                if (score > lastScore) {
+                    beatLastScore = true;
+                }
+                
+                safeSetItem('ubuntuWhackLastScore', score);
+            } catch (e) {
+                console.log('Error saving scores, continuing without persistence');
+                // Still update in-memory scores
+                if (score > highScore) {
+                    beatHighScore = true;
+                    highScore = score;
+                }
+                
+                if (score > lastScore) {
+                    beatLastScore = true;
+                }
+                lastScore = score;
+            }
+            document.getElementById('high-score').textContent = highScore;
+            document.getElementById('last-score').textContent = score;
+            
+            // Show game over popup
+            finalScoreElement.textContent = score;
+            finalLevelElement.textContent = level;
+            document.getElementById('end-high-score').textContent = highScore;
+            document.getElementById('end-last-score').textContent = lastScore;
+            
+            // Add bonus message if they beat previous scores
+            let bonusMessage = '';
+            if (beatHighScore) {
+                bonusMessage = '🏆 NEW HIGH SCORE! Congratulations!';
+            } else if (beatLastScore) {
+                bonusMessage = '🎯 You beat your last score! Keep improving!';
+            }
+            
+            // Set performance message
+            let message = '';
+            if (score < 0) {
+                message = "Oops! Looks like you need to study your Ubuntu release history.";
+            } else if (score < 50) {
+                message = "Not bad! You have some knowledge of Ubuntu LTS releases.";
+            } else if (score < 100) {
+                message = "Good job! You're familiar with Ubuntu's LTS release cycle.";
+            } else if (score < 150) {
+                message = "Great work! You're an Ubuntu release expert!";
+            } else {
+                message = "Amazing! You're a true Ubuntu release master!";
+            }
+            
+            if (bonusMessage) {
+                message = bonusMessage + '<br><br>' + message;
+            }
+            
+            performanceMessage.innerHTML = message;
+            gameOverPopup.style.display = 'flex';
+        }
+        
+        // Randomly pop up mascots
+        function popUp() {
+            if (!gameRunning) return;
+            
+            // Calculate number of mascots to show based on level
+            const maxMascots = Math.min(level + 1, 5);
+            const activeMascots = [];
+            
+            // Find which mascots are already up
+            mascots.forEach(mascot => {
+                if (mascot.style.bottom !== '-100px') {
+                    activeMascots.push(mascot);
+                }
+            });
+            
+            // If we already have enough active mascots, return
+            if (activeMascots.length >= maxMascots) {
+                setTimeout(popUp, 500);
+                return;
+            }
+            
+            // Choose a random hole that doesn't have an active mascot
+            let availableHoles = mascots.filter(mascot => 
+                mascot.style.bottom === '-100px' || mascot.style.bottom === '');
+                
+            if (availableHoles.length === 0) {
+                setTimeout(popUp, 500);
+                return;
+            }
+            
+            const randomMascot = availableHoles[Math.floor(Math.random() * availableHoles.length)];
+            
+            // Choose a random Ubuntu release
+            const release = ubuntuReleases[Math.floor(Math.random() * ubuntuReleases.length)];
+            
+            // Set the mascot's appearance and data
+            randomMascot.dataset.version = release.version;
+            randomMascot.dataset.name = release.name;
+            randomMascot.dataset.isLTS = release.isLTS;
+            
+            // Update release info
+            const releaseInfo = randomMascot.querySelector('.release-info');
+            releaseInfo.textContent = `${release.version} ${release.name}`;
+            
+            // Set mascot image
+            let filename;
+            
+            // Handle the special case for Maverick Meerkat (misspelled in filename)
+            if (release.version === '10.10') {
+                filename = 'Ubuntu_10.10-Maverik_Meerkat.png';
+            } else {
+                // For LTS releases, include LTS in the filename
+                if (release.isLTS) {
+                    filename = `Ubuntu_${release.version}-LTS_${release.name.replace(/ /g, '_')}.png`;
+                } else {
+                    filename = `Ubuntu_${release.version}-${release.name.replace(/ /g, '_')}.png`;
+                }
+            }
+            
+            // Use the actual mascot images from the fp-mascots folder
+            randomMascot.style.cssText = 'background-size: contain; background-repeat: no-repeat; background-position: center bottom;';
+            
+            // Set the mascot image from the fp-mascots directory
+            randomMascot.style.backgroundImage = `url('../images/fp-mascots/${filename}')`;
+            
+            // Remove any previous eyes if they exist
+            const existingEyes = randomMascot.querySelector('.eyes');
+            if (existingEyes) {
+                randomMascot.removeChild(existingEyes);
+            }
+            
+            // Add a small delay before showing to make pop-up animation nicer
+            setTimeout(() => {
+                // Make the mascot pop up
+                randomMascot.style.bottom = '0';
+            }, 50);
+            
+            // Make it go back down after a random time
+            const stayUpTime = Math.max(2000 - (level * 100), 800);
+            setTimeout(() => {
+                if (gameRunning && randomMascot.style.bottom === '0px') {
+                    randomMascot.style.animationPlayState = 'paused';
+                    randomMascot.style.bottom = '-100px';
+                }
+            }, stayUpTime);
+            
+            // Schedule the next pop-up
+            const nextPopUpTime = Math.max(1000 - (level * 50), 300);
+            setTimeout(popUp, nextPopUpTime);
+        }
+        
+        // Whack a mascot
+        function whackMascot(event) {
+            if (!gameRunning) return;
+            
+            const mascot = event.currentTarget;
+            const isLTS = mascot.dataset.isLTS === 'true';
+            
+            // Only count if the mascot is up
+            if (mascot.style.bottom === '0px') {
+                // Update score
+                if (isLTS) {
+                    score += 10;
+                    
+            // Add bonuses for streak or beating previous scores
+                    try {
+                        const lastGameScore = parseInt(safeGetItem('ubuntuWhackLastScore', 0));
+                        if (score > lastGameScore && score > 50) {
+                            // Bonus for beating previous score after reaching 50+ points
+                            score += 5;
+                            
+                            // Show bonus notification
+                            const bonusNotice = document.createElement('div');
+                            bonusNotice.className = 'bonus-notice';
+                            bonusNotice.textContent = '+5 BONUS!';
+                            bonusNotice.style.position = 'absolute';
+                            bonusNotice.style.top = '0';
+                            bonusNotice.style.left = '50%';
+                            bonusNotice.style.transform = 'translateX(-50%)';
+                            bonusNotice.style.color = '#4CAF50';
+                            bonusNotice.style.fontWeight = 'bold';
+                            bonusNotice.style.fontSize = '16px';
+                            bonusNotice.style.textShadow = '0 0 5px white';
+                            mascot.appendChild(bonusNotice);
+                            
+                            setTimeout(() => {
+                                if (bonusNotice.parentNode === mascot) {
+                                    mascot.removeChild(bonusNotice);
+                                }
+                            }, 1000);
+                        }
+                    } catch (e) {
+                        console.log('Error processing bonuses, continuing with basic scoring');
+                    }
+                    
+                    // Visual feedback for correct whack
+                    mascot.classList.add('correct-whack');
+                } else {
+                    score -= 5;
+                    // Visual feedback for wrong whack
+                    mascot.classList.add('wrong-whack');
+                }
+                
+                scoreElement.textContent = score;
+                
+                // Update level based on score
+                const newLevel = Math.floor(score / 30) + 1;
+                if (newLevel > level) {
+                    level = newLevel;
+                    levelElement.textContent = level;
+                }
+                
+                // Add whack animation
+                mascot.style.transform = 'scale(0.8)';
+                
+                // Make the mascot go back down after a short delay
+                setTimeout(() => {
+                    mascot.style.animationPlayState = 'paused';
+                    mascot.style.bottom = '-100px';
+                    
+                    // Reset the animation classes
+                    setTimeout(() => {
+                        mascot.classList.remove('correct-whack', 'wrong-whack');
+                        mascot.style.transform = 'scale(1)';
+                    }, 300);
+                }, 200);
+            }
+        }
+        
+        // Event listeners
+        startBtn.addEventListener('click', startGame);
+        startGameBtn.addEventListener('click', startGame);
+        instructionsBtn.addEventListener('click', () => {
+            instructionsPopup.style.display = 'flex';
+        });
+        closeInstructionsBtn.addEventListener('click', () => {
+            instructionsPopup.style.display = 'none';
+        });
+        playAgainBtn.addEventListener('click', () => {
+            gameOverPopup.style.display = 'none';
+            startGame();
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', adjustForMobile);
+        
+        // Initial setup
+        adjustForMobile();
+        createHoles();
+        
+        // Safely try to load stored scores
+        try {
+            highScore = safeGetItem('ubuntuWhackHighScore', 0);
+            lastScore = safeGetItem('ubuntuWhackLastScore', 0);
+            
+            // Update all score displays
+            const scoreElements = document.querySelectorAll('#high-score, #start-high-score, #end-high-score');
+            scoreElements.forEach(el => { 
+                if (el) el.textContent = highScore; 
+            });
+            
+            const lastScoreElements = document.querySelectorAll('#last-score, #start-last-score, #end-last-score');
+            lastScoreElements.forEach(el => { 
+                if (el) el.textContent = lastScore; 
+            });
+        } catch (e) {
+            console.log('Error loading scores, using defaults');
+        }
+    </script>
+</body>
+</html>

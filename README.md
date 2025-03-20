@@ -45,9 +45,23 @@ All games in this project adhere to the following design principles:
 Our inaugural game challenges players to match Ubuntu release versions with their corresponding codenames through a classic memory-matching mechanic. Players flip cards to find pairs, with each successful match revealing the Ubuntu release mascot. The game incorporates:
 
 - Complete Ubuntu release history from 4.10 (Warty Warthog) to present
-- Era-appropriate Circle of Friends logos
+- Era-appropriate Circle of Friends logos as optional card backs
 - Animated OB01 (Orangebox) mascot that reacts to game events
 - Educational help panel showing all releases and mascots
+- Scoring system with bonuses for LTS releases
+- Time-based challenges with bonuses for beating personal best times
+- Score history tracking via browser cookies
+
+**Game Mechanics:**
+- Match Ubuntu version numbers with their codenames
+- Score points with a strategic system:
+  - Successful match: +10 points
+  - Wrong match: -5 points
+  - LTS Match (6.06, 8.04, 10.04, etc.): +15 bonus points
+  - Time Bonus: +1 point for each second faster than previous best time
+- View your score history and compete against yourself
+- Choose between 3 and 40+ match pairs for varying difficulty
+- Option to toggle era-specific Ubuntu logos for hints or extra challenge
 
 ### 2. Ubuntu Whack-a-LTS (Reaction Game)
 Our second game tests players' knowledge of Ubuntu's release cycle in a fun adaptation of the classic whack-a-mole arcade game. Players must quickly identify and "whack" only the Long Term Support (LTS) releases while avoiding regular releases. The game features:
@@ -57,8 +71,7 @@ Our second game tests players' knowledge of Ubuntu's release cycle in a fun adap
 - Increasing difficulty as the player's score rises
 - Educational value in teaching players about Ubuntu's LTS release pattern (every 2 years in April)
 - Responsive design for both desktop and mobile play
-- Animated mascots with playful rising and falling movements
-- Immediate visual feedback on correct/incorrect choices
+- Score tracking to encourage improvement and repeated play
 
 ### Future Game Ideas
 
@@ -86,8 +99,41 @@ The games in this project are implemented using:
 - **Vanilla JavaScript**: For game logic and interactivity
 - **SVG Graphics**: For scalable, lightweight visual elements
 - **Responsive Design**: For cross-platform compatibility
+- **Cookie Storage**: For saving player progress and scores
+- **Modular JavaScript**: For maintainable and scalable code organization
 
 All games are designed to run entirely in the browser without requiring installation or plugins, making them easily accessible for educational purposes, community events, and general promotion of Ubuntu Linux.
+
+## Project Structure
+
+```
+ProGames/
+├── Canoncentration/
+│   ├── canoncentration.html
+│   ├── README.md
+├── Whack-a-mole/
+│   └── ubuntu-whack-a-mole.html
+├── images/
+│   ├── canoncentration-logo.svg
+│   ├── cof/
+│   │   ├── cof_2004-2010.svg
+│   │   ├── cof_2010-2022.svg
+│   │   └── cof-2022.svg
+│   ├── mini-mascots/
+│   ├── fp-mascots/
+│   └── ob01/
+│       ├── ob-sad.svg
+│       ├── ob-scream.svg
+│       ├── ob-wave.svg
+│       └── ob-woo.svg
+├── js/
+│   ├── canoncentration-data.js
+│   ├── canoncentration-ui.js
+│   ├── canoncentration-scoring.js
+│   ├── canoncentration-game.js
+│   └── whack-a-lts.js
+└── ubuntu-pro-academy-games.md
+```
 
 ## Contribution and Community Engagement
 
