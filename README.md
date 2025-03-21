@@ -107,7 +107,7 @@ All games are designed to run entirely in the browser without requiring installa
 ## Project Structure
 
 ```
-pro-games/
+pro-games
 ├── Canoncentration
 │   ├── canoncentration-game-spec.md
 │   ├── canoncentration.html
@@ -230,12 +230,14 @@ pro-games/
 │   │   ├── Ubuntu_8.10-Intrepid_Ibex.svg
 │   │   ├── Ubuntu_9.04-Jaunty_Jackalope.svg
 │   │   └── Ubuntu_9.10-Karmic_Koala.svg
-│   └── ob01
-│       ├── ob-sad.svg
-│       ├── ob-scream.png
-│       ├── ob-scream.svg
-│       ├── ob-wave.svg
-│       └── ob-woo.svg
+│   ├── ob01
+│   │   ├── ob-sad.svg
+│   │   ├── ob-scream.png
+│   │   ├── ob-scream.svg
+│   │   ├── ob-wave.svg
+│   │   └── ob-woo.svg
+│   ├── Ubuntu-Pro-Logo.png
+│   └── Ubuntu-Pro-Logo.svg
 ├── js
 │   ├── canoncentration-data.js
 │   ├── canoncentration-game.js
