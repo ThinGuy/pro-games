@@ -107,8 +107,35 @@
         }
         
         .game-description {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             flex-grow: 1;
+        }
+        
+        .game-status {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-ready {
+            background-color: #38B44A;
+        }
+        
+        .status-beta {
+            background-color: #F99B11;
+        }
+        
+        .status-development {
+            background-color: #ED3146;
         }
         
         .play-button {
@@ -183,6 +210,7 @@
             <h2>Welcome to the Ubuntu Pro Games Hub!</h2>
             <p>Explore Ubuntu's history, features, and ecosystem through these engaging educational games. Each game offers a unique and fun way to learn more about Ubuntu Linux and Ubuntu Pro.</p>
             <p>Perfect for both beginners and experienced Ubuntu users, these games will test your knowledge while teaching you something new about your favorite Linux distribution.</p>
+            <p><strong>Note:</strong> Check the status of each game below. Some games are ready to play, others are in beta testing (and could use your bug reports!), and some are still in development and welcoming contributors.</p>
         </section>
         
         <div class="games-grid">
@@ -193,6 +221,10 @@
                 <div class="game-content">
                     <h3 class="game-title">Canoncentration</h3>
                     <p class="game-description">Test your memory by matching Ubuntu version numbers with their codenames in this classic memory match game. Each successful match reveals the corresponding Ubuntu mascot!</p>
+                    <div class="game-status">
+                        <span class="status-indicator status-ready"></span>
+                        <span>Status: Ready to Play</span>
+                    </div>
                     <a href="Canoncentration/canoncentration.html" class="play-button">Play Now</a>
                 </div>
             </div>
@@ -204,6 +236,10 @@
                 <div class="game-content">
                     <h3 class="game-title">Ubuntu Pro Showdown</h3>
                     <p class="game-description">Challenge yourself with a trivia game all about Ubuntu Pro! Test your knowledge of security features, enterprise support, and everything Ubuntu Pro has to offer.</p>
+                    <div class="game-status">
+                        <span class="status-indicator status-beta"></span>
+                        <span>Status: Beta Testing - Looking for Bug Reports</span>
+                    </div>
                     <a href="UbuntuProShowdown/showdown.html" class="play-button">Play Now</a>
                 </div>
             </div>
@@ -215,6 +251,10 @@
                 <div class="game-content">
                     <h3 class="game-title">Whack-a-LTS</h3>
                     <p class="game-description">A fast-paced game where you need to quickly identify and "whack" the Long Term Support (LTS) releases as they appear. How many can you catch?</p>
+                    <div class="game-status">
+                        <span class="status-indicator status-development"></span>
+                        <span>Status: In Development - Contributors Welcome!</span>
+                    </div>
                     <a href="Whack-a-LTS/whack-a-lts.html" class="play-button">Play Now</a>
                 </div>
             </div>
