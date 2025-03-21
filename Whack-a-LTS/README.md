@@ -2,8 +2,6 @@
 
 A fast-paced educational game that tests your knowledge of Ubuntu's Long Term Support (LTS) releases in a fun, arcade-style format.
 
-![Whack-a-LTS Game Screenshot](../images/whack-a-lts-screenshot.png)
-
 ## Game Overview
 
 Whack-a-LTS is an Ubuntu-themed take on the classic whack-a-mole arcade game. Ubuntu release mascots pop up from holes, and players must quickly identify and whack only the LTS releases while avoiding non-LTS releases.
@@ -18,7 +16,7 @@ This game helps players learn:
 
 ## How to Play
 
-1. Click "Start Game" to begin
+1. Click "Start Game" or "Let's Play" to begin
 2. Mascots will pop up randomly from holes
 3. **Whack LTS releases** (6.06, 8.04, 10.04, 12.04, 14.04, 16.04, 18.04, 20.04, 22.04, 24.04) for **+10 points**
 4. **Avoid non-LTS releases** or lose **-5 points**
@@ -27,43 +25,50 @@ This game helps players learn:
 
 ## Technical Details
 
-### Installation
+### Project Structure
 
-Simply open `ubuntu-whack-a-mole.html` in any modern web browser.
-
-### Dependencies
-
-- No external JavaScript libraries required
-- Uses images from the `../images/fp-mascots/` directory
-- Leverages browser localStorage for score tracking (when available)
-
-### Compatibility
-
-- Works on desktop and mobile devices
-- Responsive design adapts to different screen sizes
-- Fallback mechanisms for environments where localStorage is restricted
-
-## Development Notes
-
-### File Structure
+The game uses a modular JavaScript approach with a namespace pattern to prevent variable conflicts:
 
 ```
-Whack-a-mole/
-├── ubuntu-whack-a-mole.html     # Main game file
-└── README.md                   # This file
+Whack-a-LTS/
+├── whack-a-lts.html           # Main game HTML file
+├── whack-a-lts-game-spec.md   # Game specification
+├── whack-a-lts_instructions.md # Game instructions
+└── README.md                  # This file
+
+../css/
+└── whack-styles.css           # Game styling
+
+../js/
+├── whack-data.js              # Ubuntu release data
+├── whack-storage.js           # Score persistence
+├── whack-game.js              # Core game logic
+└── whack-ui.js                # UI initialization
+
+../images/fp-mascots/
+└── Ubuntu_*.png               # Mascot images
 ```
 
-### Score Tracking
+### Code Architecture
+
+- **Namespace Pattern**: All game code uses the `WhackGame` namespace
+- **Modular Design**: Separate files for data, storage, game logic, and UI
+- **Local Storage**: Saves high scores and last scores between sessions
+- **Mobile Responsive**: Automatically adjusts to different screen sizes
+
+## Score Tracking
 
 The game attempts to use the browser's localStorage to track:
 - High Score (all-time best)
 - Last Score (most recent)
 
-Players earn bonus points (+5) for beating their previous scores once they reach 50+ points.
+These are displayed at the top of the game and on both start and end screens. Players get bonus points for beating their previous scores, encouraging repeated play and improvement.
 
-### Customization Options
+**Note on Sandboxed Environments**: The game includes fallback mechanisms for environments where localStorage access is restricted (such as sandboxed iframes). In these cases, scores will be tracked for the current session but may not persist between visits.
 
-Edit the HTML file to customize:
+## Customization Options
+
+Edit the JavaScript files to customize:
 - Game difficulty (speed and timing)
 - Point values and bonuses
 - Visual appearance

@@ -3,7 +3,11 @@
  * Contains information about Ubuntu releases and their LTS status
  */
 
-const ubuntuReleases = [
+// Define global namespace to avoid variable conflicts
+window.WhackGame = window.WhackGame || {};
+
+// Ubuntu releases data
+WhackGame.ubuntuReleases = [
     { version: "4.10", name: "Warty Warthog", isLTS: false },
     { version: "5.04", name: "Hoary Hedgehog", isLTS: false },
     { version: "5.10", name: "Breezy Badger", isLTS: false },
@@ -49,7 +53,7 @@ const ubuntuReleases = [
 ];
 
 // Default hole positions
-const defaultHolePositions = [
+WhackGame.defaultHolePositions = [
     {x: 50, y: 50},
     {x: 250, y: 50},
     {x: 450, y: 50},
