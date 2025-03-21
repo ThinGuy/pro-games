@@ -18,7 +18,8 @@ WhackGame.Game = {
         mascots: [],
         highScore: 0,
         lastScore: 0,
-        holePositions: []
+        holePositions: [],
+        debugMode: true // Enable debug mode
     },
 
     // Initialize game
@@ -35,6 +36,20 @@ WhackGame.Game = {
         const scores = WhackGame.Storage.loadScores();
         this.state.highScore = scores.highScore;
         this.state.lastScore = scores.lastScore;
+        
+        // Debug information
+        if (this.state.debugMode) {
+            console.log("Game initialized with:");
+            console.log("- Hole positions:", this.state.holePositions);
+            console.log("- High score:", this.state.highScore);
+            console.log("- Last score:", this.state.lastScore);
+            
+            // List all Ubuntu releases with LTS status
+            console.log("Ubuntu releases:");
+            WhackGame.ubuntuReleases.forEach(release => {
+                console.log(`${release.version} ${release.name}: ${release.isLTS ? 'LTS' : 'Regular'}`);
+            });
+        }
     },
 
     // Adjust hole positions for mobile
@@ -115,6 +130,10 @@ WhackGame.Game = {
             hole.appendChild(mascot);
             this.state.mascots.push(mascot);
         });
+        
+        if (this.state.debugMode) {
+            console.log(`Created ${this.state.holes.length} holes and mascots`);
+        }
     },
 
     // Start game
@@ -296,6 +315,11 @@ WhackGame.Game = {
             }
         }
         
+        // Debug filename
+        if (this.state.debugMode) {
+            console.log(`Generated filename: ${filename} for ${release.version} ${release.name}`);
+        }
+        
         // Try multiple image paths to find the correct one
         const imagePaths = [
             `../images/fp-mascots/${filename}`,
@@ -304,13 +328,60 @@ WhackGame.Game = {
             `images/fp-mascots/${filename}`
         ];
         
-        // Use fallback colors
+        if (this.state.debugMode) {
+            console.log("Attempting to load image from paths:");
+            imagePaths.forEach(path => console.log(path));
+        }
+        
+        // Start with a fallback color
         const colors = ['#E95420', '#772953', '#77216F', '#5E2750', '#2C001E', '#AEA79F'];
         const randomColor = colors[Math.floor(Math.random() * colors.length)];
         randomMascot.style.backgroundColor = randomColor;
         
         // Try to load the image from the first path
-        randomMascot.style.backgroundImage = `url('${imagePaths[0]}')`;
+        const testImage = new Image();
+        testImage.onload = () => {
+            // Image loaded successfully, use it
+            randomMascot.style.backgroundImage = `url('${imagePaths[0]}')`;
+            randomMascot.style.backgroundColor = 'transparent';
+            if (this.state.debugMode) console.log(`Successfully loaded image from ${imagePaths[0]}`);
+        };
+        testImage.onerror = () => {
+            // Try the second path
+            const testImage2 = new Image();
+            testImage2.onload = () => {
+                randomMascot.style.backgroundImage = `url('${imagePaths[1]}')`;
+                randomMascot.style.backgroundColor = 'transparent';
+                if (this.state.debugMode) console.log(`Successfully loaded image from ${imagePaths[1]}`);
+            };
+            testImage2.onerror = () => {
+                // Try the third path
+                const testImage3 = new Image();
+                testImage3.onload = () => {
+                    randomMascot.style.backgroundImage = `url('${imagePaths[2]}')`;
+                    randomMascot.style.backgroundColor = 'transparent';
+                    if (this.state.debugMode) console.log(`Successfully loaded image from ${imagePaths[2]}`);
+                };
+                testImage3.onerror = () => {
+                    // Try the fourth path
+                    const testImage4 = new Image();
+                    testImage4.onload = () => {
+                        randomMascot.style.backgroundImage = `url('${imagePaths[3]}')`;
+                        randomMascot.style.backgroundColor = 'transparent';
+                        if (this.state.debugMode) console.log(`Successfully loaded image from ${imagePaths[3]}`);
+                    };
+                    testImage4.onerror = () => {
+                        // Use colored background as fallback
+                        randomMascot.style.backgroundImage = 'none';
+                        if (this.state.debugMode) console.log("All image paths failed, using color fallback");
+                    };
+                    testImage4.src = imagePaths[3];
+                };
+                testImage3.src = imagePaths[2];
+            };
+            testImage2.src = imagePaths[1];
+        };
+        testImage.src = imagePaths[0];
         
         // Add a small delay before showing to make pop-up animation nicer
         setTimeout(() => {
@@ -342,6 +413,10 @@ WhackGame.Game = {
         
         const mascot = event.currentTarget;
         const isLTS = mascot.dataset.isLTS === 'true';
+        
+        if (this.state.debugMode) {
+            console.log(`Whacked: ${mascot.dataset.version} ${mascot.dataset.name} (LTS: ${isLTS})`);
+        }
         
         // Only count if the mascot is up
         if (mascot.style.bottom === '0px') {

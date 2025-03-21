@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ubuntu Pro Games Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ubuntu-orange: #E95420;
+            --ubuntu-dark: #333333;
+            --ubuntu-light: #EFEFEF;
+            --ubuntu-aubergine: #77216F;
+            --ubuntu-warm-grey: #AEA79F;
+        }
+        
+        body {
+            font-family: 'Ubuntu', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--ubuntu-light);
+            color: var(--ubuntu-dark);
+        }
+        
+        header {
+            background-color: var(--ubuntu-orange);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            margin: 0;
+            font-weight: 300;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            font-weight: 300;
+            margin: 0.5rem 0 0;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .intro {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 4px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .game-card {
+            background-color: white;
+            border-radius: 4px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .game-image {
+            height: 180px;
+            background-color: var(--ubuntu-aubergine);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        
+        .game-image img {
+            max-height: 120px;
+            max-width: 100%;
+        }
+        
+        .game-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .game-title {
+            font-size: 1.5rem;
+            margin: 0 0 0.5rem 0;
+            color: var(--ubuntu-orange);
+        }
+        
+        .game-description {
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+        
+        .play-button {
+            background-color: var(--ubuntu-orange);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-family: 'Ubuntu', sans-serif;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+        }
+        
+        .play-button:hover {
+            background-color: #c7431a;
+        }
+        
+        .ob-character {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 100px;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            z-index: 100;
+        }
+        
+        .ob-character:hover {
+            transform: scale(1.1);
+        }
+        
+        footer {
+            background-color: var(--ubuntu-dark);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+        
+        footer a {
+            color: var(--ubuntu-orange);
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Ubuntu Pro Games Hub</h1>
+        <p class="subtitle">Learn about Ubuntu while having fun!</p>
+    </header>
+    
+    <div class="container">
+        <section class="intro">
+            <h2>Welcome to the Ubuntu Pro Games Hub!</h2>
+            <p>Explore Ubuntu's history, features, and ecosystem through these engaging educational games. Each game offers a unique and fun way to learn more about Ubuntu Linux and Ubuntu Pro.</p>
+            <p>Perfect for both beginners and experienced Ubuntu users, these games will test your knowledge while teaching you something new about your favorite Linux distribution.</p>
+        </section>
+        
+        <div class="games-grid">
+            <div class="game-card">
+                <div class="game-image">
+                    <img src="images/canoncentration-logo.svg" alt="Canoncentration Game Logo">
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title">Canoncentration</h3>
+                    <p class="game-description">Test your memory by matching Ubuntu version numbers with their codenames in this classic memory match game. Each successful match reveals the corresponding Ubuntu mascot!</p>
+                    <a href="Canoncentration/canoncentration.html" class="play-button">Play Now</a>
+                </div>
+            </div>
+            
+            <div class="game-card">
+                <div class="game-image">
+                    <img src="images/ubuntu-pro-logo.svg" alt="Ubuntu Pro Showdown Logo">
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title">Ubuntu Pro Showdown</h3>
+                    <p class="game-description">Challenge yourself with a trivia game all about Ubuntu Pro! Test your knowledge of security features, enterprise support, and everything Ubuntu Pro has to offer.</p>
+                    <a href="UbuntuProShowdown/showdown.html" class="play-button">Play Now</a>
+                </div>
+            </div>
+            
+            <div class="game-card">
+                <div class="game-image">
+                    <img src="images/ubuntu-pro-logo.png" alt="Whack-a-LTS Logo">
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title">Whack-a-LTS</h3>
+                    <p class="game-description">A fast-paced game where you need to quickly identify and "whack" the Long Term Support (LTS) releases as they appear. How many can you catch?</p>
+                    <a href="Whack-a-LTS/whack-a-lts.html" class="play-button">Play Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <img src="images/ob01/ob-wave.svg" alt="OB01 Character" class="ob-character" id="ob-character">
+    
+    <footer>
+        <p>&copy; 2025 Canonical Ltd. Ubuntu and Canonical are registered trademarks of Canonical Ltd.</p>
+        <p>Ubuntu Pro Games Hub is designed to provide educational content about <a href="https://ubuntu.com/pro" target="_blank">Ubuntu Pro</a>.</p>
+    </footer>
+    
+    <script>
+        // Simple script to switch between OB01 character expressions
+        const character = document.getElementById('ob-character');
+        const expressions = ['ob-wave.svg', 'ob-woo.svg', 'ob-sad.svg', 'ob-scream.svg'];
+        let currentIndex = 0;
+        
+        character.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % expressions.length;
+            character.src = `images/ob01/${expressions[currentIndex]}`;
+        });
+        
+        // Easter egg: Show a random OB character when hovering over game cards
+        const gameCards = document.querySelectorAll('.game-card');
+        
+        gameCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                const randomExpression = expressions[Math.floor(Math.random() * expressions.length)];
+                character.src = `images/ob01/${randomExpression}`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                // Reset to wave when mouse leaves
+                character.src = 'images/ob01/ob-wave.svg';
+            });
+        });
+    </script>
+</body>
+</html>

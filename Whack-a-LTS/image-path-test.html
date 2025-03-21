@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Path Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .test-section {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        .image-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .image-test {
+            width: 100px;
+            height: 100px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            border: 1px dashed #aaa;
+            position: relative;
+        }
+        .image-label {
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            right: 0;
+            font-size: 10px;
+            text-align: center;
+        }
+        h3 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Image Path Test</h1>
+    <p>This page tests different paths to access the Ubuntu mascot images.</p>
+    
+    <div class="test-section">
+        <h3>Path Test 1: ../images/fp-mascots/</h3>
+        <div class="image-container">
+            <div class="image-test" style="background-image: url('../images/fp-mascots/Ubuntu_22.04-LTS_Jammy_Jellyfish.png');">
+                <div class="image-label">../images/fp-mascots/Ubuntu_22.04-LTS_Jammy_Jellyfish.png</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Path Test 2: ../../images/fp-mascots/</h3>
+        <div class="image-container">
+            <div class="image-test" style="background-image: url('../../images/fp-mascots/Ubuntu_22.04-LTS_Jammy_Jellyfish.png');">
+                <div class="image-label">../../images/fp-mascots/Ubuntu_22.04-LTS_Jammy_Jellyfish.png</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Path Test 3: /images/fp-mascots/</h3>
+        <div class="image-container">
+            <div class="image-test" style="background-image: url('/images/fp-mascots/Ubuntu_22.04-LTS_Jammy_Jellyfish.png');">
+                <div class="image-label">/images/fp-mascots/Ubuntu_22.04-LTS_Jammy_Jellyfish.png</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Path Test 4: images/fp-mascots/</h3>
+        <div class="image-container">
+            <div class="image-test" style="background-image: url('images/fp-mascots/Ubuntu_22.04-LTS_Jammy_Jellyfish.png');">
+                <div class="image-label">images/fp-mascots/Ubuntu_22.04-LTS_Jammy_Jellyfish.png</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // This script will check which images loaded successfully
+        window.onload = function() {
+            const testImages = document.querySelectorAll('.image-test');
+            
+            testImages.forEach(img => {
+                // Get the computed style
+                const style = window.getComputedStyle(img);
+                const bgImage = style.backgroundImage;
+                
+                // Check if an image is actually loaded (not just the URL specified)
+                if (bgImage === 'none' || bgImage === '') {
+                    img.style.backgroundColor = '#ffcccc'; // Red background for failed loads
+                    img.innerHTML += '<div style="padding:5px;">Failed to load</div>';
+                } else {
+                    // Create an image element to verify it loads
+                    const testImg = new Image();
+                    testImg.onload = function() {
+                        img.style.backgroundColor = '#ccffcc'; // Green background for successful loads
+                        img.innerHTML += '<div style="padding:5px;">Loaded successfully</div>';
+                    };
+                    testImg.onerror = function() {
+                        img.style.backgroundColor = '#ffcccc'; // Red background for failed loads
+                        img.innerHTML += '<div style="padding:5px;">Failed to load</div>';
+                    };
+                    
+                    // Extract the URL from the background-image style
+                    const urlMatch = bgImage.match(/url\(['"]?(.*?)['"]?\)/);
+                    if (urlMatch && urlMatch[1]) {
+                        testImg.src = urlMatch[1];
+                    }
+                }
+            });
+        };
+    </script>
+</body>
+</html>
