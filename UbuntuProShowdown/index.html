@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ubuntu Pro Showdown: The Ultimate Trivia Challenge</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/welcome-popup.css">
+  <link rel="preconnect" href="https://assets.ubuntu.com">
+  <link rel="stylesheet" href="https://assets.ubuntu.com/v1/vanilla-framework-version-3.8.0.min.css" />
+  <!-- Ubuntu Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body class="l-application" data-game-state="start">
+  <header class="p-strip--dark u-no-padding--bottom">
+    <div class="row">
+      <div class="col-8">
+        <div class="game-header">
+          <img src="images/ubuntu-pro-logo.svg" alt="Ubuntu Pro" class="game-logo">
+          <h1 class="game-title">Pro Showdown</h1>
+        </div>
+      </div>
+      <div class="col-4 u-align--right">
+        <div id="score-display" class="score-display u-hide">
+          <span>Score: </span>
+          <span id="current-score">0</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="p-strip">
+    <!-- Start Screen -->
+    <section id="start-screen" class="game-screen active">
+      <div class="row">
+        <div class="col-6">
+          <h2>The Ultimate Trivia Challenge</h2>
+          <p>Test your knowledge of Ubuntu Pro features and open source licensing concepts in this fast-paced trivia game!</p>
+          
+          <div class="p-card game-mode-card">
+            <h3>Select Game Mode</h3>
+            <div class="p-button-group">
+              <button class="p-button game-mode" data-mode="quick">
+                <span class="mode-name">Quick Play</span>
+                <span class="mode-desc">5 questions</span>
+              </button>
+              <button class="p-button game-mode" data-mode="full">
+                <span class="mode-name">Full Challenge</span>
+                <span class="mode-desc">15 questions</span>
+              </button>
+              <button class="p-button game-mode" data-mode="lightning">
+                <span class="mode-name">Lightning Round</span>
+                <span class="mode-desc">Decreasing time limits</span>
+              </button>
+            </div>
+          </div>
+          
+          <div class="p-card daily-challenge-card">
+            <h3>Daily Challenge</h3>
+            <p>Complete today's challenge to earn bonus points and special achievements!</p>
+            <button class="p-button--positive" id="start-daily">Start Daily Challenge</button>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="mascot-container">
+            <img src="images/ob01/ob-wave.svg" alt="OB01 Mascot" class="mascot">
+          </div>
+          <div class="p-card">
+            <h3>Your Stats</h3>
+            <ul class="p-list--divided">
+              <li class="p-list__item">Games Played: <span id="games-played">0</span></li>
+              <li class="p-list__item">Best Score: <span id="best-score">0</span></li>
+              <li class="p-list__item">Achievements: <span id="achievements-count">0/10</span></li>
+            </ul>
+            <button class="p-button--neutral" id="view-achievements">View Achievements</button>
+            <button class="p-button--neutral" id="view-leaderboard">View Leaderboard</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Game Screen -->
+    <section id="game-screen" class="game-screen">
+      <div class="row">
+        <div class="col-8">
+          <div class="question-container p-card">
+            <div class="question-header">
+              <span id="question-category" class="question-category">Ubuntu Pro Fundamentals</span>
+              <span id="question-counter" class="question-counter">Question 1/5</span>
+            </div>
+            <div id="timer-bar" class="timer-bar">
+              <div class="timer-progress"></div>
+            </div>
+            <div id="question-text" class="question-text">
+              What is Ubuntu Pro?
+            </div>
+            <div id="answers-container" class="answers-container">
+              <!-- Answers will be inserted here by JavaScript -->
+            </div>
+          </div>
+          
+          <div id="knowledge-card" class="p-card knowledge-card u-hide">
+            <h3>Knowledge Card</h3>
+            <p id="knowledge-text">Ubuntu Pro is a premium version of Ubuntu that includes security patches, compliance tools, and extended support for 10 years.</p>
+            <div class="u-align--right">
+              <button class="p-button--neutral" id="learn-more">Learn More</button>
+              <button class="p-button--positive" id="next-question">Next Question</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="mascot-container game-mascot">
+            <img src="images/ob01/ob-wave.svg" alt="OB01 Mascot" class="mascot" id="game-mascot">
+          </div>
+          
+          <div class="powerups-container p-card">
+            <h3>Power-Ups</h3>
+            <div class="p-button-group">
+              <button class="p-button--neutral powerup" id="fifty-fifty" disabled>
+                <span class="powerup-name">50/50</span>
+                <span class="powerup-count">(0)</span>
+              </button>
+              <button class="p-button--neutral powerup" id="time-freeze" disabled>
+                <span class="powerup-name">Time Freeze</span>
+                <span class="powerup-count">(0)</span>
+              </button>
+              <button class="p-button--neutral powerup" id="ask-community" disabled>
+                <span class="powerup-name">Ask Community</span>
+                <span class="powerup-count">(0)</span>
+              </button>
+            </div>
+          </div>
+          
+          <div class="stats-container p-card">
+            <h3>Current Stats</h3>
+            <ul class="p-list">
+              <li class="p-list__item">Correct Answers: <span id="correct-count">0</span></li>
+              <li class="p-list__item">Current Streak: <span id="current-streak">0</span></li>
+              <li class="p-list__item">Time Bonus: <span id="time-bonus">0</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- End Game Screen -->
+    <section id="end-screen" class="game-screen">
+      <div class="row">
+        <div class="col-6">
+          <div class="p-card">
+            <h2>Game Complete!</h2>
+            <div class="mascot-container">
+              <img src="images/ob01/ob-woo.svg" alt="OB01 Mascot" class="mascot">
+            </div>
+            <div class="final-score">
+              <h3>Final Score: <span id="final-score">0</span></h3>
+            </div>
+            <div class="score-breakdown">
+              <ul class="p-list">
+                <li class="p-list__item">Correct Answers: <span id="final-correct">0</span> × 10 = <span id="answers-score">0</span></li>
+                <li class="p-list__item">Time Bonus: <span id="final-time-bonus">0</span></li>
+                <li class="p-list__item">Streak Bonus: <span id="final-streak-bonus">0</span></li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="p-card achievement-card u-hide" id="new-achievement-card">
+            <h3>New Achievement Unlocked!</h3>
+            <div class="achievement-details">
+              <img src="images/achievements/ubuntu-explorer.svg" alt="Achievement" class="achievement-icon" id="achievement-icon">
+              <div>
+                <h4 id="achievement-name">Ubuntu Explorer</h4>
+                <p id="achievement-desc">Completed your first game</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="p-card leaderboard-preview">
+            <h3>Leaderboard Position</h3>
+            <p>You ranked <span id="leaderboard-position">--</span> out of <span id="leaderboard-total">--</span> players!</p>
+            <div class="p-button-group">
+              <button class="p-button--positive" id="play-again">Play Again</button>
+              <button class="p-button--neutral" id="share-results">Share Results</button>
+              <button class="p-button--neutral" id="challenge-friend">Challenge a Friend</button>
+            </div>
+          </div>
+          
+          <div class="p-card">
+            <h3>Want to Learn More?</h3>
+            <p>Explore Ubuntu Pro documentation to deepen your knowledge.</p>
+            <a href="https://ubuntu.com/pro" class="p-button--neutral" target="_blank">Visit Ubuntu Pro</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Achievements Screen -->
+    <section id="achievements-screen" class="game-screen">
+      <div class="row">
+        <div class="col-12">
+          <div class="p-card">
+            <h2>Achievements</h2>
+            <div class="achievements-grid" id="achievements-grid">
+              <!-- Achievements will be inserted here by JavaScript -->
+            </div>
+            <div class="u-align--right">
+              <button class="p-button--neutral" id="back-to-start">Back to Start</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Leaderboard Screen -->
+    <section id="leaderboard-screen" class="game-screen">
+      <div class="row">
+        <div class="col-12">
+          <div class="p-card">
+            <h2>Leaderboard</h2>
+            <div class="p-tabs">
+              <ul class="p-tabs__list" role="tablist">
+                <li class="p-tabs__item" role="presentation">
+                  <a href="#global-tab" class="p-tabs__link" role="tab" aria-selected="true">Global</a>
+                </li>
+                <li class="p-tabs__item" role="presentation">
+                  <a href="#weekly-tab" class="p-tabs__link" role="tab">Weekly</a>
+                </li>
+                <li class="p-tabs__item" role="presentation">
+                  <a href="#friends-tab" class="p-tabs__link" role="tab">Friends</a>
+                </li>
+              </ul>
+            </div>
+            <div id="global-tab" class="p-tabs__content" role="tabpanel">
+              <table class="p-table--sortable">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Score</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody id="global-leaderboard">
+                  <!-- Leaderboard entries will be inserted here by JavaScript -->
+                </tbody>
+              </table>
+            </div>
+            <div id="weekly-tab" class="p-tabs__content" role="tabpanel" hidden>
+              <table class="p-table--sortable">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Score</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody id="weekly-leaderboard">
+                  <!-- Leaderboard entries will be inserted here by JavaScript -->
+                </tbody>
+              </table>
+            </div>
+            <div id="friends-tab" class="p-tabs__content" role="tabpanel" hidden>
+              <table class="p-table--sortable">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Score</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody id="friends-leaderboard">
+                  <!-- Leaderboard entries will be inserted here by JavaScript -->
+                </tbody>
+              </table>
+            </div>
+            <div class="u-align--right">
+              <button class="p-button--neutral" id="back-from-leaderboard">Back to Start</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="p-strip--light">
+    <div class="row">
+      <div class="col-12">
+        <p class="u-align--center">
+          Part of the <a href="#">Ubuntu Pro Academy Games</a> project. 
+          <a href="https://ubuntu.com/legal">Legal</a> | 
+          <a href="#" id="settings-link">Settings</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Notification Component -->
+  <div class="p-notification--positive u-hide" id="notification">
+    <div class="p-notification__content">
+      <h5 class="p-notification__title" id="notification-title">Success!</h5>
+      <p class="p-notification__message" id="notification-message">You've earned a new achievement!</p>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="p-modal" id="settings-modal">
+    <div class="p-modal__dialog" role="dialog" aria-labelledby="settings-title" aria-modal="true">
+      <header class="p-modal__header">
+        <h2 class="p-modal__title" id="settings-title">Game Settings</h2>
+        <button class="p-modal__close" aria-label="Close settings modal">Close</button>
+      </header>
+      <div class="p-modal__body">
+        <form>
+          <label for="sound-toggle" class="p-form__label">Sound effects</label>
+          <div class="p-switch">
+            <input type="checkbox" class="p-switch__input" id="sound-toggle" checked>
+            <label class="p-switch__label" for="sound-toggle">Sound</label>
+          </div>
+          
+          <label for="difficulty-select" class="p-form__label">Difficulty</label>
+          <select id="difficulty-select" class="p-form__control">
+            <option value="easy">Easy</option>
+            <option value="medium" selected>Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+          
+          <label for="player-name" class="p-form__label">Player Name</label>
+          <input type="text" id="player-name" class="p-form__control" placeholder="Enter your name">
+        </form>
+      </div>
+      <footer class="p-modal__footer">
+        <button class="p-button--neutral u-no-margin--bottom" id="settings-cancel">Cancel</button>
+        <button class="p-button--positive u-no-margin--bottom" id="settings-save">Save settings</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Welcome Popup -->
+  <div id="welcome-popup" class="popup">
+    <div class="popup-content">
+      <h2>Welcome to Ubuntu Pro Showdown</h2>
+      <p>Test your knowledge of Ubuntu Pro features and open source licensing in this fast-paced trivia game!</p>
+      
+      <h3>Game Rules:</h3>
+      <ul style="text-align: left;">
+        <li>Answer questions within the time limit to earn points</li>
+        <li>Correct answer: +10 points base (medium +15, hard +20)</li>
+        <li>Fast answer bonus: up to +5 points for quick answers</li>
+        <li>Streak bonus: +2 points per consecutive correct answer (max +10)</li>
+        <li>Use powerups strategically to help with difficult questions</li>
+        <li>Unlock achievements for special accomplishments</li>
+      </ul>
+      
+      <h3>Game Modes:</h3>
+      <ul style="text-align: left;">
+        <li><strong>Quick Play:</strong> 5 questions for a fast game</li>
+        <li><strong>Full Challenge:</strong> 15 questions across all categories</li>
+        <li><strong>Lightning Round:</strong> 10 questions with decreasing time limits</li>
+        <li><strong>Daily Challenge:</strong> Special daily question for bonus rewards</li>
+      </ul>
+      
+      <p>Answer correctly and quickly for the highest score. Good luck!</p>
+      <button id="welcome-close-btn" class="p-button--positive">Let's Play!</button>
+    </div>
+  </div>
+
+  <!-- Instructions Popup (can be shown from menu) -->
+  <div id="instructions-popup" class="popup" style="display: none;">
+    <div class="popup-content">
+      <h2>How to Play</h2>
+      
+      <h3>Gameplay:</h3>
+      <ul style="text-align: left;">
+        <li>Read each question carefully and select the correct answer</li>
+        <li>Answer faster for more points - the timer bar shows remaining time</li>
+        <li>Build a streak of correct answers for bonus points</li>
+        <li>Read knowledge cards to learn more about each topic</li>
+      </ul>
+      
+      <h3>Powerups:</h3>
+      <ul style="text-align: left;">
+        <li><strong>50/50:</strong> Removes two incorrect answers</li>
+        <li><strong>Time Freeze:</strong> Pauses the timer for 10 seconds</li>
+        <li><strong>Ask Community:</strong> Shows how others answered this question</li>
+      </ul>
+      
+      <p>Earn powerups by achieving high scores and completing achievements.</p>
+      <button id="close-instructions-btn" class="p-button--neutral">Close</button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/questions.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/welcome-popup.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
