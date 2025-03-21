@@ -1,6 +1,64 @@
 /**
- * Main game logic for the Ubuntu Whack-a-LTS game
+/home/craigbender/Dropbox/pro-games/js * Main game logic for the Ubuntu Whack-a-LTS game
  */
+ 
+// Pop up mascots randomly
+function popUp() {
+    if (!gameRunning) return;
+    
+    // Find all inactive mascots
+    const inactiveMascots = mascots.filter(mascot => 
+        mascot.style.bottom === '-100px' || mascot.style.bottom === '');
+    
+    if (inactiveMascots.length === 0) {
+        // Try again in a very short time
+        const retryTimeout = setTimeout(popUp, 100);
+        activeMascots.push(retryTimeout);
+        return;
+    }
+    
+    // Pick a random mascot
+    const randomIndex = Math.floor(Math.random() * inactiveMascots.length);
+    const mascot = inactiveMascots[randomIndex];
+    
+    // Pick a random Ubuntu release
+    const releaseIndex = Math.floor(Math.random() * ubuntuReleases.length);
+    const release = ubuntuReleases[releaseIndex];
+    
+    // Set the mascot image
+    const imagePath = `../images/fp-mascots/Ubuntu_${release.version}-${release.name.replace(' ', '_')}.png`;
+    mascot.style.backgroundImage = `url('${imagePath}')`;
+    
+    // Add release info
+    const releaseInfo = mascot.querySelector('.release-info');
+    if (releaseInfo) {
+        releaseInfo.textContent = `${release.version} ${release.name}`;
+    }
+    
+    // Store whether this is LTS for click handling
+    mascot.dataset.isLts = release.isLTS;
+    
+    // Show the mascot
+    mascot.style.bottom = '0';
+    mascot.style.animationPlayState = 'running';
+    
+    // Adjust timing based on level
+    const stayUpTime = Math.max(500, 2000 - (level * 100));
+    
+    // Hide after a random time
+    const hideTimeout = setTimeout(() => {
+        if (gameRunning && mascot.style.bottom === '0px') {
+            mascot.style.bottom = '-100px';
+        }
+    }, stayUpTime);
+    
+    activeMascots.push(hideTimeout);
+    
+    // Schedule next popup with increasing frequency based on level
+    const nextPopUpTime = Math.max(300, 1000 - (level * 50));
+    const nextPopupTimeout = setTimeout(popUp, nextPopUpTime);
+    activeMascots.push(nextPopupTimeout);
+}
 
 // Game state
 let score = 0;

@@ -1,0 +1,347 @@
+:root {
+  --ubuntu-orange: #E95420;
+  --ubuntu-purple: #5E2750;
+  --light-gray: #f7f7f7;
+  --dark-gray: #333333;
+  --success-green: #0e8420;
+  --error-red: #c7162b;
+  --brand-accent: #2c001e;
+  --text-color: #111;
+  --text-light: #fff;
+}
+
+body {
+  font-family: 'Ubuntu', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--light-gray);
+}
+
+main {
+  flex: 1;
+}
+
+/* Game header */
+.game-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.game-logo {
+  height: 60px;
+}
+
+.game-title {
+  color: var(--text-light);
+  margin: 0;
+  font-size: 2.5rem;
+}
+
+.score-display {
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  color: var(--text-light);
+  font-weight: bold;
+  font-size: 1.2rem;
+  display: inline-block;
+}
+
+/* Game screens */
+.game-screen {
+  display: none;
+  padding: 2rem 0;
+}
+
+.game-screen.active {
+  display: block;
+}
+
+/* Game mode selection */
+.game-mode-card, .daily-challenge-card {
+  margin-bottom: 2rem;
+}
+
+.game-mode {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  margin: 0.5rem;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.game-mode:hover {
+  border-color: var(--ubuntu-orange);
+}
+
+.mode-name {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 0.25rem;
+}
+
+.mode-desc {
+  font-size: 0.875rem;
+  opacity: 0.8;
+}
+
+/* Mascot */
+.mascot-container {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.mascot {
+  height: 200px;
+  transition: transform 0.3s ease;
+}
+
+.mascot:hover {
+  transform: scale(1.05);
+}
+
+.game-mascot {
+  position: sticky;
+  top: 1rem;
+}
+
+/* Question & Answers */
+.question-container {
+  margin-bottom: 2rem;
+}
+
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.question-category {
+  background-color: var(--ubuntu-purple);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.timer-bar {
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.timer-progress {
+  height: 100%;
+  width: 100%;
+  background-color: var(--ubuntu-orange);
+  transition: width 0.1s linear;
+}
+
+.question-text {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.answers-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.answer-button {
+  padding: 1.25rem 1rem;
+  text-align: left;
+  border: 2px solid #e0e0e0;
+  background-color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 1rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.answer-button:hover {
+  border-color: var(--ubuntu-orange);
+}
+
+.answer-button::before {
+  content: attr(data-prefix);
+  color: var(--ubuntu-orange);
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.answer-button.correct {
+  background-color: var(--success-green);
+  color: white;
+  border-color: var(--success-green);
+}
+
+.answer-button.incorrect {
+  background-color: var(--error-red);
+  color: white;
+  border-color: var(--error-red);
+}
+
+.answer-button.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Knowledge card */
+.knowledge-card {
+  margin-bottom: 2rem;
+  border-left: 4px solid var(--ubuntu-orange);
+}
+
+/* Powerups */
+.powerups-container {
+  margin-bottom: 2rem;
+}
+
+.powerup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem;
+  margin: 0.25rem;
+}
+
+.powerup-name {
+  font-weight: bold;
+}
+
+.powerup-count {
+  font-size: 0.875rem;
+  opacity: 0.8;
+}
+
+/* End game */
+.final-score {
+  background-color: var(--ubuntu-orange);
+  color: white;
+  padding: 1rem;
+  border-radius: 4px;
+  text-align: center;
+  margin: 1.5rem 0;
+}
+
+.final-score h3 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.score-breakdown {
+  margin-bottom: 1.5rem;
+}
+
+.achievement-card {
+  margin-top: 2rem;
+  border-left: 4px solid var(--ubuntu-purple);
+}
+
+.achievement-details {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.achievement-icon {
+  width: 60px;
+  height: 60px;
+}
+
+/* Achievements grid */
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.achievement-item {
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.achievement-item.unlocked {
+  border-color: var(--ubuntu-orange);
+}
+
+.achievement-item.locked {
+  opacity: 0.7;
+  filter: grayscale(1);
+}
+
+.achievement-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.achievement-item img {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 1rem;
+}
+
+.achievement-item h4 {
+  margin: 0 0 0.5rem 0;
+}
+
+.achievement-item p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+/* Notification */
+#notification {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  max-width: 300px;
+  z-index: 1000;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .answers-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .game-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .game-logo {
+    height: 40px;
+  }
+  
+  .game-title {
+    font-size: 2rem;
+  }
+  
+  .mascot {
+    height: 150px;
+  }
+}
